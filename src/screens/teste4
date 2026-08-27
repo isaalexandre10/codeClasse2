@@ -1,0 +1,9 @@
+<Text
+  style={{
+    fontSize: 30, fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 20
+  }}
+> Meu Aplicativo </Text>
+<Text></Text>

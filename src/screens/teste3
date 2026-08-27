@@ -1,0 +1,90 @@
+import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+export default function EstilizacaoScreen() {
+  return (
+    <View>
+        <Text style={[styles.titulo, styles.container]}>Estilização com StyleSheet + Layout com Flexbox</Text>
+        <Text style={styles.titulo}> A Importância da Programação nos Dias Atuais</Text> 
+        <Text style={styles.descricao}>A programação, também conhecida como codificação ou desenvolvimento de software, desempenha um papel fundamental na sociedade contemporânea. </Text>
+        <Text>Imagine um mundo sem aplicativos móveis, redes sociais, sistemas de gerenciamento de dados ou até mesmo sites de compras online. Essas inovações só são possíveis graças à programação.</Text>
+        <Text style={styles.subtitulo}>1. Automação e Eficiência</Text>
+        <Text style={styles.descricao}>A programação automatiza tarefas repetitivas e demoradas. Imagine um supermercado sem sistemas de registro de caixa ou um hospital sem sistemas de gerenciamento de pacientes.</Text>
+        <Pressable style={styles.botao}>
+          <Text style={styles.textoBotao}>Entrar</Text>
+        </Pressable>
+        <Text>Teste</Text>
+        <TouchableOpacity style={styles.botao}>
+          <Text style={styles.textoBotao}>Meu Botão</Text>
+        </TouchableOpacity>
+
+        <View style={styles.ofertaDescricao}>
+            <Text>Item 1</Text>
+            <Text>Item 2</Text>
+        </View>
+        <View>
+          <TouchableOpacity style={{backgroundColor:'blue'}}>
+          <Text >Meu Botão</Text>
+        </TouchableOpacity>
+        </View>
+
+        <View>
+            <Text style={styles.tituloOferta}>Oferta Especial</Text>  
+            <Text style={styles.oferta}>Curso com 50% de desconto</Text>
+        </View>
+        <View>
+            <Text>Item 1</Text>
+            <Text>Item 2</Text>
+            <Text>Item 3</Text>
+        </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f2f2f2',
+    margin: 30,
+    borderRadius: 100,
+  },
+
+  titulo: {
+    color: 'Black',
+    fontSize: 32,
+    fontWeight: 'bold', 
+    textDecorationLine: 'underline'
+  },
+  subtitulo: {
+    color: 'Black',
+    fontSize: 16, 
+    fontWeight: 'bold',
+    fontStyle: 'italic'
+  },
+  descricao: {
+    color: 'Black',
+    fontSize: 14,
+  },
+  botao: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    width: 200, 
+  },
+    textoBotao: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    width: 200, 
+  },
+  oferta: {
+    backgroundColor: '#FFE082',
+    padding: 20,
+    margin: 20,
+    borderRadius: 15,
+  },
+
+  tituloOferta: {
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+});
