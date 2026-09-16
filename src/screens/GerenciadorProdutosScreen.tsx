@@ -8,7 +8,8 @@ interface Produto {
   nome: string;
 }
 
-export default function GerenciadorProdutosScreen() {
+export default function GerenciadorProdutosScreen({ route, navigation }: any) {
+  const produtoId = route.params;
   // Guarda o texto digitado no TextInput.
   const [nome, setNome] = useState('');
 
@@ -38,6 +39,7 @@ export default function GerenciadorProdutosScreen() {
   }
   return (
     <View >
+      <Text>ID: {produtoId}</Text>
         {/* Cabeçalho da aplicação */}
       <Text style={styles.titulo}>
         Gerenciador de Produtos
@@ -77,13 +79,10 @@ export default function GerenciadorProdutosScreen() {
         Produtos cadastrados: {produtos.length}
       </Text>
       <FlatList
-
         // Lista utilizada pelo FlatList.
         data={produtos}
-
         // Cria uma chave única para cada item.
         keyExtractor={(item) => item.id}
-
         // Define como cada produto será mostrado.
         renderItem={({ item }) => (
           <ProductCard nome={item.nome} />
@@ -96,12 +95,30 @@ export default function GerenciadorProdutosScreen() {
           </Text>
         }
       />
+      {/*
+        TouchableOpacity cria uma área clicável.
+        Aqui ele funciona como um botão de voltar.
+      */}
+      <TouchableOpacity
+
+        // onPress define o que acontece
+        // quando o usuário toca no botão.
+        onPress={() =>
+          // goBack() volta para a tela anterior
+          // que já estava na pilha de navegação.
+          navigation.goBack()
+        }
+      >
+        {/* Texto exibido dentro do botão */}
+        <Text>
+          Voltar
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: '#f1f5f9',

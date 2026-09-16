@@ -4,15 +4,14 @@ function mostrarMensagem() {
   alert('Bem-vindo ao aplicativo!'); 
 }
 export default
- function ComponentesBasicos(){
+ function ComponentesBasicos({ navigation }: any){
     return(
         <View>
             <Text>Ola Mundo!</Text>
-         () => 
             <Text>-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</Text>
             <View> 
                 <Text>Button</Text> 
-                <Button title="Clique aqui" onPress={alert('Botão pressionado!')} /> 
+                <Button title="Clique aqui" onPress={mostrarMensagem} /> 
                 <Button title='Ok' onPress={mostrarMensagem} />           
             </View> 
             <Text>-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</Text>
@@ -30,12 +29,20 @@ export default
                 </TouchableOpacity>
             </View>
             <Text>-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</Text>
-        <View>
-            <TouchableOpacity onPress={() => alert('Imagem pressionada!')} > 
-            <Image source={{ uri:'https://reactnative.dev/img/tiny_logo.png' }}  style={{ width: 100, height: 100 }} /> 
-            <Text>Clique na imagem</Text>
-            </TouchableOpacity> 
-        </View>
-        </View>
+            <View>
+                <TouchableOpacity onPress={() => alert('Imagem pressionada!')} > 
+                <Image source={{ uri:'https://reactnative.dev/img/tiny_logo.png' }}  style={{ width: 100, height: 100 }} /> 
+                <Text>Clique na imagem</Text>
+                </TouchableOpacity> 
+            </View>
+            <TouchableOpacity
+                onPress={() =>
+                    navigation.navigate('EstilizacaoScreen')}
+            >
+                <Text>
+                    Apresentacao do CodeClass
+                </Text>
+            </TouchableOpacity>
+            </View>
     );
 }
