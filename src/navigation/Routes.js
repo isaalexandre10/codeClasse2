@@ -4,6 +4,7 @@ import HomeScreen from '../screens/HomeScreen';
 import ComponentesBasicos from '../screens/ComponentesBasicos';
 import EstilizacaoScreen from '../screens/EstilizacaoScreen';
 import GerenciadorProdutosScreen from '../screens/GerenciadorProdutosScreen';
+import CadastroCliente from '../screens/CadastroClienteScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,10 @@ export default function Routes() {
             name="GerenciadorProdutos"
             component={GerenciadorProdutosScreen}
         />
+        <Stack.Screen
+          name="CadastroCliente"
+          component={CadastroCliente}
+          />
       </Stack.Navigator>
 
     </NavigationContainer>
