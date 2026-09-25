@@ -34,13 +34,43 @@ export default function HomeScreen({ navigation }: any) {
           Gerenciador de Produtos
         </Text>
       </TouchableOpacity>
+      {/* NOVO BOTÃO LOGIN */}
       <TouchableOpacity
         style={styles.botao}
         onPress={() =>
-          navigation.navigate('CadastroCliente')
-        }>
+          navigation.navigate(
+            'LoginScreen'
+          )
+        }
+      >
         <Text>
-          Cadastro de Cliente
+          LOGIN
+        </Text>
+      </TouchableOpacity>
+      {/* CADASTRO CLIENTE */}
+      <TouchableOpacity
+        style={styles.botao}
+        onPress={() =>
+          navigation.navigate(
+            'CadastroCliente'
+          )
+        }
+      >
+        <Text>
+          CADASTRO DE CLIENTE
+        </Text>
+      </TouchableOpacity>
+      {/* NOVO BOTÃO PRODUTO */}
+      <TouchableOpacity
+        style={styles.botao}
+        onPress={() =>
+          navigation.navigate(
+            'CadastroProdutoScreen'
+          )
+        }
+      >
+        <Text>
+          CADASTRO DE PRODUTO
         </Text>
       </TouchableOpacity>
     </ScrollView>

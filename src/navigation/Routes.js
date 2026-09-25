@@ -5,6 +5,8 @@ import ComponentesBasicos from '../screens/ComponentesBasicos';
 import EstilizacaoScreen from '../screens/EstilizacaoScreen';
 import GerenciadorProdutosScreen from '../screens/GerenciadorProdutosScreen';
 import CadastroCliente from '../screens/CadastroClienteScreen';
+import LoginScreen from '../screens/LoginScreen';
+import CadastroProdutoScreen from '../screens/CadastroProdutoScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +36,23 @@ export default function Routes() {
         <Stack.Screen
           name="CadastroCliente"
           component={CadastroCliente}
-          />
+        />
+        {/* NOVA ROTA LOGIN */}
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={{
+            title: 'Login'
+          }}
+        />
+        {/* NOVA ROTA CADASTRO PRODUTO */}
+        <Stack.Screen
+          name="CadastroProdutoScreen"
+          component={CadastroProdutoScreen}
+          options={{
+            title: 'Cadastro de Produto'
+          }}
+        />
       </Stack.Navigator>
 
     </NavigationContainer>
