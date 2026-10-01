@@ -6,9 +6,17 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-
-
-export default function CadastroProdutoScreen() {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+interface Produto {
+    id: string;
+    nome: string;
+    descricao: string;
+    categoria: string;
+    preco: number;
+    quantidade: number;
+  }
+  const CHAVE_PRODUTOS = '@codeclass:produtos';
+export default function CadastroProdutoScreen({navigation, route}:any) {
 
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
@@ -16,18 +24,59 @@ export default function CadastroProdutoScreen() {
   const [preco, setPreco] = useState('');
   const [quantidade, setQuantidade] = useState('');
 
-
   const [erroNome, setErroNome] = useState('');
   const [erroDescricao, setErroDescricao] = useState('');
   const [erroCategoria, setErroCategoria] = useState('');
   const [erroPreco, setErroPreco] = useState('');
   const [erroQuantidade, setErroQuantidade] = useState('');
 
+  const novoProduto: Produto = {
+    id: Date.now().toString(),
+    nome: nome,
+    descricao: descricao,
+    categoria: categoria,
+    preco: Number(preco.replace(',', '.')),
+    quantidade: Number(quantidade),
+  };
 
-  function validarNome() {
+  async function cadastrarProduto() {
+    const novoProduto: Produto = {
+    id: Date.now().toString(),
+    nome: nome,
+    descricao: descricao,
+    categoria: categoria,
+    preco: Number(preco.replace(',', '.')),
+    quantidade: Number(quantidade),
+    };
+    try {
+    // Busca o JSON que já estava salvo.
+    const dadosSalvos =
+    await AsyncStorage.getItem(CHAVE_PRODUTOS);
+    // Converte o JSON para array.
+    // Se não houver nada, começa com [].
+    const produtosAntigos: Produto[] =
+    dadosSalvos
+    ? JSON.parse(dadosSalvos)
+    : [];
+    // Mantém os antigos e adiciona o novo.
+    const novaLista = [
+    ...produtosAntigos,
+    novoProduto,
+    ]; // Converte a lista para texto JSON
+    // e salva no armazenamento local.
+    await AsyncStorage.setItem(
+    CHAVE_PRODUTOS,
+    JSON.stringify(novaLista)
+    );
+    } catch (error) {
+    console.log('Erro ao salvar produto:', error);
+    }
+}
+
+function validarNome() {
 
     if (nome.trim() === '') {
-      setErroNome('O nome do produto é obrigatório');
+    setErroNome('O nome do produto é obrigatório');
       return false;
     }
 
@@ -291,12 +340,11 @@ export default function CadastroProdutoScreen() {
           styles.botaoDesabilitado
         ]}
         disabled={!formularioValido}
+        onPress={cadastrarProduto}
       >
-
         <Text style={styles.textoBotao}>
           CADASTRAR PRODUTO
         </Text>
-
       </TouchableOpacity>
 
     </ScrollView>

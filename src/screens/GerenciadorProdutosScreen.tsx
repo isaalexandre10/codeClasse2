@@ -1,13 +1,14 @@
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProductCard from "../components/ProductCard";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define o formato de cada produto.
 interface Produto {
   id: string;
   nome: string;
 }
-
+const CHAVE_PRODUTOS = '@codeclass:produtos';
 export default function GerenciadorProdutosScreen({ route, navigation }: any) {
   const produtoId = route.params;
   // Guarda o texto digitado no TextInput.
@@ -15,7 +16,16 @@ export default function GerenciadorProdutosScreen({ route, navigation }: any) {
 
   // Guarda todos os produtos cadastrados.
   const [produtos, setProdutos] = useState<Produto[]>([]);
-
+async function carregarProdutos() {
+ const dadosSalvos =
+ await AsyncStorage.getItem(
+ CHAVE_PRODUTOS
+ );
+ if (dadosSalvos !== null) {
+ const lista: Produto[] =
+ JSON.parse(dadosSalvos);
+ setProdutos(lista);
+ }}
   function adicionarProduto() {
     // Impede cadastrar um produto vazio.
     if (nome.trim() === '') {
@@ -63,7 +73,6 @@ export default function GerenciadorProdutosScreen({ route, navigation }: any) {
 
         <TouchableOpacity
           style={styles.botao}
-
           // Executa a função ao pressionar o botão.
           onPress={adicionarProduto}
         >

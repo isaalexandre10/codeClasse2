@@ -27,7 +27,7 @@ export default function HomeScreen({ navigation }: any) {
       <TouchableOpacity
         style={styles.botaoDestaque}
         onPress={() =>
-          navigation.navigate('GerenciadorProdutos',1)
+          navigation.navigate('GerenciadorProdutos')
         }
       >
         <Text style={styles.textoBranco}>
