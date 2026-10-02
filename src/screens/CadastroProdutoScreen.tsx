@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ScrollView,
   Text,
@@ -17,7 +17,6 @@ interface Produto {
   }
   const CHAVE_PRODUTOS = '@codeclass:produtos';
 export default function CadastroProdutoScreen({navigation, route}:any) {
-
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
   const [categoria, setCategoria] = useState('');
@@ -30,6 +29,21 @@ export default function CadastroProdutoScreen({navigation, route}:any) {
   const [erroPreco, setErroPreco] = useState('');
   const [erroQuantidade, setErroQuantidade] = useState('');
 
+  const produtoEdicao: Produto | undefined = route.params?.produto;
+
+  useEffect(() => {
+    // Verifica se existe um produto sendo editado.
+    // Se produtoEdicao existir, significa que o usuário
+    // clicou no botão "Editar" no Gerenciador de Produtos.
+    if (produtoEdicao) {
+    setNome(produtoEdicao.nome);
+    setDescricao(produtoEdicao.descricao);
+    setCategoria(produtoEdicao.categoria);
+    setPreco(String(produtoEdicao.preco));
+    setQuantidade(String(produtoEdicao.quantidade));
+    }
+    }, [produtoEdicao]);
+  
   const novoProduto: Produto = {
     id: Date.now().toString(),
     nome: nome,
@@ -39,42 +53,7 @@ export default function CadastroProdutoScreen({navigation, route}:any) {
     quantidade: Number(quantidade),
   };
 
-  async function cadastrarProduto() {
-    const novoProduto: Produto = {
-    id: Date.now().toString(),
-    nome: nome,
-    descricao: descricao,
-    categoria: categoria,
-    preco: Number(preco.replace(',', '.')),
-    quantidade: Number(quantidade),
-    };
-    try {
-    // Busca o JSON que já estava salvo.
-    const dadosSalvos =
-    await AsyncStorage.getItem(CHAVE_PRODUTOS);
-    // Converte o JSON para array.
-    // Se não houver nada, começa com [].
-    const produtosAntigos: Produto[] =
-    dadosSalvos
-    ? JSON.parse(dadosSalvos)
-    : [];
-    // Mantém os antigos e adiciona o novo.
-    const novaLista = [
-    ...produtosAntigos,
-    novoProduto,
-    ]; // Converte a lista para texto JSON
-    // e salva no armazenamento local.
-    await AsyncStorage.setItem(
-    CHAVE_PRODUTOS,
-    JSON.stringify(novaLista)
-    );
-    } catch (error) {
-    console.log('Erro ao salvar produto:', error);
-    }
-}
-
-function validarNome() {
-
+  function validarNome() {
     if (nome.trim() === '') {
     setErroNome('O nome do produto é obrigatório');
       return false;
@@ -83,7 +62,6 @@ function validarNome() {
     setErroNome('');
     return true;
   }
-
 
   function validarDescricao() {
 
@@ -96,9 +74,7 @@ function validarNome() {
     return true;
   }
 
-
   function validarCategoria() {
-
     if (categoria.trim() === '') {
       setErroCategoria('A categoria é obrigatória');
       return false;
@@ -107,10 +83,8 @@ function validarNome() {
     setErroCategoria('');
     return true;
   }
-
-
+  
   function validarPreco() {
-
     if (preco.trim() === '') {
       setErroPreco('Informe o preço do produto');
       return false;
@@ -120,9 +94,7 @@ function validarNome() {
     return true;
   }
 
-
   function validarQuantidade() {
-
     if (quantidade.trim() === '') {
       setErroQuantidade('Informe a quantidade');
       return false;
@@ -140,7 +112,6 @@ function validarNome() {
     return true;
   }
 
-
   const formularioValido =
     nome.trim() !== '' &&
     descricao.trim() !== '' &&
@@ -149,9 +120,65 @@ function validarNome() {
     quantidade.trim() !== '' &&
     Number(quantidade) > 0;
 
-
+  async function salvarProduto() {
+    try {
+    // Busca os produtos que já estão salvos.
+    const dadosSalvos =
+    await AsyncStorage.getItem(CHAVE_PRODUTOS);
+    // Se existir conteúdo salvo, converte o JSON para uma lista.
+    // Se não existir, começa com uma lista vazia.
+    const produtosAntigos: Produto[] =
+    dadosSalvos ? JSON.parse(dadosSalvos) : [];
+    if (produtoEdicao) {
+    // UPDATE: Percorre a lista e atualiza apenas o produto que possui o mesmo ID.
+    const listaAtualizada = produtosAntigos.map((produto) => {
+    if (produto.id === produtoEdicao.id) {
+    return {
+    id: produto.id,
+    nome,
+    descricao,
+    categoria,
+    preco: Number(preco.replace(',', '.')),
+    quantidade: Number(quantidade),
+    };
+    }
+    return produto;
+    });
+    // Salva a lista atualizada no AsyncStorage.
+    await AsyncStorage.setItem(
+    CHAVE_PRODUTOS,
+    JSON.stringify(listaAtualizada)
+    );
+    } else {
+    // CREATE:
+    // Cria um novo produto com um ID único.
+    const novoProduto: Produto = {
+    id: Date.now().toString(),
+    nome,
+    descricao,
+    categoria,
+    preco: Number(preco.replace(',', '.')),
+    quantidade: Number(quantidade),
+    };
+    // Adiciona o novo produto à lista antiga.
+    const novaLista = [
+    ...produtosAntigos,
+    novoProduto
+    ];
+    // Salva a nova lista no AsyncStorage.
+    await AsyncStorage.setItem(
+    CHAVE_PRODUTOS,
+    JSON.stringify(novaLista)
+    );
+    }
+    // Volta para a tela anterior após salvar.
+    navigation.goBack();
+    } catch (error) {
+    // Mostra no console caso aconteça algum erro.
+    console.log('Erro ao salvar produto:', error);
+    }
+    }
   return (
-
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.conteudo}
@@ -163,7 +190,6 @@ function validarNome() {
 
 
       {/* NOME */}
-
       <Text style={styles.label}>
         Nome do Produto
       </Text>
@@ -175,7 +201,6 @@ function validarNome() {
         ]}
         placeholder="Digite o nome do produto"
         value={nome}
-
         onChangeText={(texto) => {
           setNome(texto);
 
@@ -183,7 +208,6 @@ function validarNome() {
             setErroNome('');
           }
         }}
-
         onBlur={validarNome}
       />
 
@@ -193,13 +217,10 @@ function validarNome() {
         </Text>
       )}
 
-
       {/* DESCRIÇÃO */}
-
       <Text style={styles.label}>
         Descrição
       </Text>
-
       <TextInput
         style={[
           styles.input,
@@ -208,17 +229,13 @@ function validarNome() {
         ]}
         placeholder="Digite a descrição do produto"
         value={descricao}
-
         onChangeText={(texto) => {
           setDescricao(texto);
-
           if (texto.trim() !== '') {
             setErroDescricao('');
           }
         }}
-
         onBlur={validarDescricao}
-
         multiline
       />
 
@@ -228,9 +245,7 @@ function validarNome() {
         </Text>
       )}
 
-
       {/* CATEGORIA */}
-
       <Text style={styles.label}>
         Categoria
       </Text>
@@ -245,12 +260,10 @@ function validarNome() {
 
         onChangeText={(texto) => {
           setCategoria(texto);
-
           if (texto.trim() !== '') {
             setErroCategoria('');
           }
         }}
-
         onBlur={validarCategoria}
       />
 
@@ -260,9 +273,7 @@ function validarNome() {
         </Text>
       )}
 
-
       {/* PREÇO */}
-
       <Text style={styles.label}>
         Preço
       </Text>
@@ -282,9 +293,7 @@ function validarNome() {
             setErroPreco('');
           }
         }}
-
         onBlur={validarPreco}
-
         keyboardType="decimal-pad"
       />
 
@@ -294,9 +303,7 @@ function validarNome() {
         </Text>
       )}
 
-
       {/* QUANTIDADE */}
-
       <Text style={styles.label}>
         Quantidade
       </Text>
@@ -308,19 +315,13 @@ function validarNome() {
         ]}
         placeholder="Digite a quantidade"
         value={quantidade}
-
         onChangeText={(texto) => {
-
           setQuantidade(texto);
-
           if (Number(texto) > 0) {
             setErroQuantidade('');
           }
-
         }}
-
         onBlur={validarQuantidade}
-
         keyboardType="numeric"
       />
 
@@ -330,9 +331,7 @@ function validarNome() {
         </Text>
       )}
 
-
       {/* BOTÃO */}
-
       <TouchableOpacity
         style={[
           styles.botao,
@@ -340,21 +339,19 @@ function validarNome() {
           styles.botaoDesabilitado
         ]}
         disabled={!formularioValido}
-        onPress={cadastrarProduto}
+        onPress={salvarProduto}
       >
         <Text style={styles.textoBotao}>
-          CADASTRAR PRODUTO
+          {produtoEdicao
+            ? 'SALVAR ALTERAÇÕES'
+            : 'CADASTRAR PRODUTO'}
         </Text>
       </TouchableOpacity>
-
     </ScrollView>
-
   );
 }
 
-
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: '#f1f5f9',
@@ -419,5 +416,4 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-
 });
